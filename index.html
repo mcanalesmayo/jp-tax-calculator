@@ -8,7 +8,7 @@
 <body>
   <div id="app">
     <label for="employmentIncome">Employment income</label>
-    <input name="employmentIncome" type="text" v-model="employmentIncome">
+    <input name="employmentIncome" type="text" v-model.number="employmentIncome">
 
     <div>
       Employment income deduction: {{ employmentIncomeDeduction }}
