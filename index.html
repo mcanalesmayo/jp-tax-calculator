@@ -7,18 +7,41 @@
 </head>
 <body>
   <div id="app">
-    <label for="employmentIncome">Employment income</label>
-    <input name="employmentIncome" type="text" v-model.number="employmentIncome">
+    <div class="form-group row">
+      <label id="empIncLabel" class="col-sm-2 col-form-label" for="empIncInput">Employment income</label>
+      <div class="input-group col-sm-10">
+        <span class="input-group-prepend input-group-text">&yen;</span>
+        <input id="empIncInput" type="text" class="form-control" placeholder="Gross income" aria-describedby="empIncLabel" v-model.number="employmentIncome">
+      </div>
+    </div>
 
-    <div>
-      Employment income deduction: {{ employmentIncomeDeduction }}
-    </div>
-    <div>
-      Taxable income: {{ taxableIncome }}
-    </div>
-    <div>
-      Income tax: {{ incomeTax }}
-    </div>
+    <form>
+      <fieldset disabled>
+        <div class="form-group row">
+          <label id="empIncDeductLabel" class="col-sm-2 col-form-label" for="empIncDeductInput">Employment income deduction</label>
+          <div class="input-group col-sm-10">
+            <span class="input-group-prepend input-group-text">&yen;</span>
+            <input id="empIncDeductInput" type="text" class="form-control" aria-describedby="empIncDeductLabel" v-model.number="employmentIncomeDeduction">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label id="taxableIncLabel" class="col-sm-2 col-form-label" for="taxableIncInput">Taxable income</label>
+          <div class="input-group col-sm-10">
+            <span class="input-group-prepend input-group-text">&yen;</span>
+            <input id="taxableIncInput" type="text" class="form-control" aria-describedby="taxableIncLabel" v-model.number="taxableIncome">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label id="incomeTax" class="col-sm-2 col-form-label" for="incomeTaxInput">Income tax</label>
+          <div class="input-group col-sm-10">
+            <span class="input-group-prepend input-group-text">&yen;</span>
+            <input id="incomeTaxInput" type="text" class="form-control" aria-describedby="incomeTax" v-model.number="incomeTax">
+          </div>
+        </div>
+      </fieldset>
+    </form>
   </div>
 
   <!-- Bootstrap -->
