@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <label for="employmentIncome">Employment income</label>
+    <input name="employmentIncome" type="text" v-model="employmentIncome">
+
+    <div>
+      Employment income deduction: {{ employmentIncomeDeduction }}
+    </div>
+    <div>
+      Taxable income: {{ taxableIncome }}
+    </div>
+    <div>
+      Income tax: {{ incomeTax }}
+    </div>
+  </div>
+
+  <script type="text/javascript" src="app.js"></script>
+</body>
+</html>
