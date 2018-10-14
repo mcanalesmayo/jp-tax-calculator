@@ -2,7 +2,7 @@
   <form>
     <fieldset disabled>
       <div class="form-group row" v-for="(output, key, index) in outputs">
-        <label :id="key + 'Label'" class="col-sm-2 col-form-label" :for="key + 'Input'">{{ output.description }}</label>
+        <label :id="key + 'Label'" class="col-sm-2 col-form-label" :for="key + 'Input'">{{ output.title }}</label>
         <div class="input-group col-sm-10">
           <span class="input-group-prepend input-group-text">&yen;</span>
           <input :id="key + 'Input'" type="text" class="form-control" :aria-describedby="key + 'Label'" v-model.number="output.value">
@@ -29,9 +29,14 @@ export default {
         }
       }
     },
-    taxableIncome() {
-      return this.inputs.employmentIncome.value - this.employmentIncomeDeduction;
+
+    nationalTaxableIncome() {
+      return this.inputs.employmentIncome.value - (this.employmentIncomeDeduction + this.rules.nationalEmploymentIncomeDeduction);
     },
+    localTaxableIncome() {
+      return this.inputs.employmentIncome.value - (this.employmentIncomeDeduction + this.rules.localEmploymentIncomeDeduction);
+    },
+
     incomeTax() {
       var oCurrRule,
         iCurrLowerLimit = 0,
@@ -41,12 +46,12 @@ export default {
         oCurrRule = this.rules.orderedIncomeTaxRules[i];
         
         // Assuming there's at least an upperLimit Infinity rule
-        if (oCurrRule.upperLimit < this.taxableIncome) {
+        if (oCurrRule.upperLimit < this.nationalTaxableIncome) {
           fTax += (oCurrRule.upperLimit - iCurrLowerLimit) * oCurrRule.rate;
           
           iCurrLowerLimit = oCurrRule.upperLimit;
         } else {
-          fTax += (this.taxableIncome - iCurrLowerLimit) * oCurrRule.rate;
+          fTax += (this.nationalTaxableIncome - iCurrLowerLimit) * oCurrRule.rate;
           
           break;
         }
@@ -57,50 +62,82 @@ export default {
     restorationIncomeSurtax() {
       return this.incomeTax * this.rules.restorationIncomeSurtaxRate;
     },
+
+    healthInsurance() {
+      return this.inputs.employmentIncome.value * this.rules.healthInsurance;
+    },
+    welfarePension() {
+      return this.inputs.employmentIncome.value * this.rules.welfarePension;
+    },
+    socialInsurance() {
+      return this.healthInsurance + this.welfarePension;
+    },
+    laborInsurance() {
+      return this.inputs.employmentIncome.value * this.rules.laborInsurance;
+    },
+
     prefecturalTax() {
-      return this.taxableIncome * this.rules.prefecturalTaxRate.proportional + this.rules.prefecturalTaxRate.fixed;
+      return this.localTaxableIncome * this.rules.prefecturalTaxRate.proportional + this.rules.prefecturalTaxRate.fixed;
     },
     municipalTax() {
-      return this.taxableIncome * this.rules.municipalTaxRate.proportional + this.rules.municipalTaxRate.fixed;
+      return this.localTaxableIncome * this.rules.municipalTaxRate.proportional + this.rules.municipalTaxRate.fixed;
     },
-    totalTaxes() {
-      return this.incomeTax + this.restorationIncomeSurtax + this.prefecturalTax + this.municipalTax;
+
+    totalPay() {
+      return this.incomeTax + this.restorationIncomeSurtax + this.prefecturalTax + this.municipalTax + this.socialInsurance + this.laborInsurance;
     },
     netIncome() {
-      return this.inputs.employmentIncome.value - this.totalTaxes;
+      return this.inputs.employmentIncome.value - this.totalPay;
     },
+
     outputs() {
       return {
-        employmentIncomeDeduction: {
-          description: "Employment income deduction",
-          value: this.employmentIncomeDeduction
-        },
-        taxableIncome: {
-          description: "Taxable income",
-          value: this.taxableIncome
+        nationalTaxableIncome: {
+          title: "National taxable income",
+          value: this.nationalTaxableIncome
         },
         incomeTax: {
-          description: "Income tax",
+          title: "Income tax",
           value: this.incomeTax
         },
         restorationIncomeSurtax: {
-          description: "Restoration income surtax",
+          title: "Restoration income surtax",
           value: this.restorationIncomeSurtax
         },
+        localTaxableIncome: {
+          title: "Local taxable income",
+          value: this.localTaxableIncome
+        },
         prefecturalTax: {
-          description: "Prefectural tax",
+          title: "Prefectural tax",
           value: this.prefecturalTax
         },
         municipalTax: {
-          description: "Municipal tax",
+          title: "Municipal tax",
           value: this.municipalTax
         },
-        totalTaxes: {
-          description: "Total taxes",
-          value: this.totalTaxes
+        healthInsurance: {
+          title: "Health insurance",
+          value: this.healthInsurance
+        },
+        welfarePension: {
+          title: "Welfare pension",
+          value: this.welfarePension
+        },
+        socialInsurance: {
+          title: "Social insurance (health + welfare)",
+          value: this.socialInsurance
+        },
+        laborInsurance: {
+          title: "Labor insurance",
+          value: this.laborInsurance
+        },
+        totalPay: {
+          title: "Total pay",
+          value: this.totalPay
         },
         netIncome: {
-          description: "Net income",
+          title: "Net income",
           value: this.netIncome
         }
       };

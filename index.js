@@ -12,12 +12,15 @@ new Vue({
     return {
       inputs: {
         employmentIncome: {
-          description: "Employment income",
+          title: "Employment income (yearly)",
           placeholder: "Gross income",
           value: 6500000
         }
       },
       rules: {
+        nationalEmploymentIncomeDeduction: 380e3,
+        localEmploymentIncomeDeduction: 330e3,
+        
         orderedDeductionRules: [
           {
             upperLimit: 1.625e6,
@@ -93,6 +96,11 @@ new Vue({
           }
         ],
         restorationIncomeSurtaxRate: 2.1e-2,
+
+        healthInsurance: 4.95e-2,
+        welfarePension: 9.15e-2,
+        laborInsurance: 0.6e-2,
+
         prefecturalTaxRate: {
           proportional: 4e-2,
           fixed: 1.5e3
