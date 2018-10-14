@@ -76,7 +76,8 @@ var app = new Vue({
         upperLimit: Infinity,
         rate: 0.45
       }
-    ]
+    ],
+    restorationIncomeSurtaxRate: 2.1e-2
   },
   computed: {
     employmentIncomeDeduction: function() {
@@ -115,6 +116,9 @@ var app = new Vue({
       }
       
       return fTax;
+    },
+    restorationIncomeSurtax: function() {
+      return this.incomeTax*this.restorationIncomeSurtaxRate;
     }
   }
 });
