@@ -42,11 +42,11 @@ export default {
         
         // Assuming there's at least an upperLimit Infinity rule
         if (oCurrRule.upperLimit < this.taxableIncome) {
-          fTax += (oCurrRule.upperLimit - iCurrLowerLimit)*oCurrRule.rate;
+          fTax += (oCurrRule.upperLimit - iCurrLowerLimit) * oCurrRule.rate;
           
           iCurrLowerLimit = oCurrRule.upperLimit;
         } else {
-          fTax += (this.taxableIncome - iCurrLowerLimit)*oCurrRule.rate;
+          fTax += (this.taxableIncome - iCurrLowerLimit) * oCurrRule.rate;
           
           break;
         }
@@ -55,7 +55,19 @@ export default {
       return fTax;
     },
     restorationIncomeSurtax() {
-      return this.incomeTax*this.rules.restorationIncomeSurtaxRate;
+      return this.incomeTax * this.rules.restorationIncomeSurtaxRate;
+    },
+    prefecturalTax() {
+      return this.taxableIncome * this.rules.prefecturalTaxRate.proportional + this.rules.prefecturalTaxRate.fixed;
+    },
+    municipalTax() {
+      return this.taxableIncome * this.rules.municipalTaxRate.proportional + this.rules.municipalTaxRate.fixed;
+    },
+    totalTaxes() {
+      return this.incomeTax + this.restorationIncomeSurtax + this.prefecturalTax + this.municipalTax;
+    },
+    netIncome() {
+      return this.inputs.employmentIncome.value - this.totalTaxes;
     },
     outputs() {
       return {
@@ -74,6 +86,22 @@ export default {
         restorationIncomeSurtax: {
           description: "Restoration income surtax",
           value: this.restorationIncomeSurtax
+        },
+        prefecturalTax: {
+          description: "Prefectural tax",
+          value: this.prefecturalTax
+        },
+        municipalTax: {
+          description: "Municipal tax",
+          value: this.municipalTax
+        },
+        totalTaxes: {
+          description: "Total taxes",
+          value: this.totalTaxes
+        },
+        netIncome: {
+          description: "Net income",
+          value: this.netIncome
         }
       };
     }

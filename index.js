@@ -92,7 +92,15 @@ new Vue({
             rate: 0.45
           }
         ],
-        restorationIncomeSurtaxRate: 2.1e-2
+        restorationIncomeSurtaxRate: 2.1e-2,
+        prefecturalTaxRate: {
+          proportional: 4e-2,
+          fixed: 1.5e3
+        },
+        municipalTaxRate: {
+          proportional: 6e-2,
+          fixed: 3.5e3
+        }
       }
     };
   }
