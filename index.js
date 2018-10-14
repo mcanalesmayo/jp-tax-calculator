@@ -13,6 +13,7 @@ new Vue({
       inputs: {
         employmentIncome: {
           title: "Employment income (yearly)",
+          description: "Salary",
           placeholder: "Gross income",
           value: 6500000
         }
@@ -20,7 +21,7 @@ new Vue({
       rules: {
         nationalEmploymentIncomeDeduction: 380e3,
         localEmploymentIncomeDeduction: 330e3,
-        
+
         orderedDeductionRules: [
           {
             upperLimit: 1.625e6,

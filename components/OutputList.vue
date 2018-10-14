@@ -94,50 +94,96 @@ export default {
       return {
         nationalTaxableIncome: {
           title: "National taxable income",
+          description: "Salary minus Employment income deductions",
+          references: [
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Deductions",
+            "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
+          ],
           value: this.nationalTaxableIncome
         },
         incomeTax: {
           title: "Income tax",
+          description: "Portion of the Salary that is taxable",
+          references: [
+            "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html",
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Taxes-on-personal-income"
+          ],
           value: this.incomeTax
         },
         restorationIncomeSurtax: {
           title: "Restoration income surtax",
+          references: [
+            "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html",
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Taxes-on-personal-income"
+          ],
           value: this.restorationIncomeSurtax
         },
         localTaxableIncome: {
           title: "Local taxable income",
+          references: [
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Deductions",
+            "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
+          ],
           value: this.localTaxableIncome
         },
         prefecturalTax: {
           title: "Prefectural tax",
+          references: [
+            "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
+          ],
           value: this.prefecturalTax
         },
         municipalTax: {
           title: "Municipal tax",
+          references: [
+            "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
+          ],
           value: this.municipalTax
         },
         healthInsurance: {
           title: "Health insurance",
+          description: "4.95% of the Salary",
+          references: [
+            "https://www.pwc.com/jp/en/tax-services/assets/pdf/starting_operation_in_japan_2018.pdf",
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Other-taxes"
+          ],
           value: this.healthInsurance
         },
         welfarePension: {
           title: "Welfare pension",
+          description: "9.15% of the Salary",
+          references: [
+            "https://www.pwc.com/jp/en/tax-services/assets/pdf/starting_operation_in_japan_2018.pdf",
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Other-taxes"
+          ],
           value: this.welfarePension
         },
         socialInsurance: {
-          title: "Social insurance (health + welfare)",
+          title: "Social insurance",
+          description: "Sum of Health insurance + Welfare pension",
+          references: [
+            "https://www.pwc.com/jp/en/tax-services/assets/pdf/starting_operation_in_japan_2018.pdf",
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Other-taxes"
+          ],
           value: this.socialInsurance
         },
         laborInsurance: {
           title: "Labor insurance",
+          description: "0.6% of the Salary",
+          references: [
+            "https://www.pwc.com/jp/en/tax-services/assets/pdf/starting_operation_in_japan_2018.pdf",
+            "http://taxsummaries.pwc.com/ID/Japan-Individual-Other-taxes"
+          ],
           value: this.laborInsurance
         },
         totalPay: {
           title: "Total pay",
+          description: "Sum of all taxes and insurances",
           value: this.totalPay
         },
         netIncome: {
           title: "Net income",
+          description: "Salary minus all taxes and insurances",
           value: this.netIncome
         }
       };
