@@ -27,15 +27,15 @@ export default {
       employmentInfo: {
         employmentIncome: {
           title: "Yearly income",
-          description: "Salary",
+          description: "Employment income (salary)",
           placeholder: "Gross income",
           value: 6500000,
           type: 'in'
         }
       },
       rules: {
-        nationalEmploymentIncomeDeduction: 380e3,
-        localEmploymentIncomeDeduction: 330e3,
+        nationalTaxesDeduction: 380e3,
+        localTaxesDeduction: 330e3,
 
         orderedDeductionRules: [
           {
@@ -138,16 +138,16 @@ export default {
         
         // Assuming there's at least an upperLimit Infinity rule
         if (iEmploymentIncome <= oCurrRule.upperLimit) {
-          return iEmploymentIncome * oCurrRule.deduction.proportional + oCurrRule.deduction.fixed;
+          return this.zeroLowerLimit(iEmploymentIncome * oCurrRule.deduction.proportional + oCurrRule.deduction.fixed);
         }
       }
     },
 
     nationalTaxableIncome() {
-      return this.employmentInfo.employmentIncome.value - (this.employmentIncomeDeduction + this.rules.nationalEmploymentIncomeDeduction);
+      return this.zeroLowerLimit(this.employmentInfo.employmentIncome.value - (this.employmentIncomeDeduction + this.rules.nationalTaxesDeduction));
     },
     localTaxableIncome() {
-      return this.employmentInfo.employmentIncome.value - (this.employmentIncomeDeduction + this.rules.localEmploymentIncomeDeduction);
+      return this.zeroLowerLimit(this.employmentInfo.employmentIncome.value - (this.employmentIncomeDeduction + this.rules.localTaxesDeduction));
     },
 
     incomeTax() {
@@ -170,30 +170,30 @@ export default {
         }
       }
       
-      return fTax;
+      return this.zeroLowerLimit(fTax);
     },
     restorationIncomeSurtax() {
-      return this.incomeTax * this.rules.restorationIncomeSurtaxRate;
+      return this.zeroLowerLimit(this.incomeTax * this.rules.restorationIncomeSurtaxRate);
     },
 
     healthInsurance() {
-      return this.employmentInfo.employmentIncome.value * this.rules.healthInsurance;
+      return this.zeroLowerLimit(this.employmentInfo.employmentIncome.value * this.rules.healthInsurance);
     },
     welfarePension() {
-      return this.employmentInfo.employmentIncome.value * this.rules.welfarePension;
+      return this.zeroLowerLimit(this.employmentInfo.employmentIncome.value * this.rules.welfarePension);
     },
     socialInsurance() {
       return this.healthInsurance + this.welfarePension;
     },
     laborInsurance() {
-      return this.employmentInfo.employmentIncome.value * this.rules.laborInsurance;
+      return this.zeroLowerLimit(this.employmentInfo.employmentIncome.value * this.rules.laborInsurance);
     },
 
     prefecturalTax() {
-      return this.localTaxableIncome * this.rules.prefecturalTaxRate.proportional + this.rules.prefecturalTaxRate.fixed;
+      return this.zeroLowerLimit(this.localTaxableIncome * this.rules.prefecturalTaxRate.proportional + this.rules.prefecturalTaxRate.fixed);
     },
     municipalTax() {
-      return this.localTaxableIncome * this.rules.municipalTaxRate.proportional + this.rules.municipalTaxRate.fixed;
+      return this.zeroLowerLimit(this.localTaxableIncome * this.rules.municipalTaxRate.proportional + this.rules.municipalTaxRate.fixed);
     },
 
     totalPay() {
@@ -207,7 +207,7 @@ export default {
       return {
         nationalTaxableIncome: {
           title: "National taxable income",
-          description: "Salary minus Employment income deductions",
+          description: "Salary minus Employment income deductions and national taxes deduction. Portion of the Salary that is taxable for national taxes.",
           references: [
             "http://taxsummaries.pwc.com/ID/Japan-Individual-Deductions",
             "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
@@ -217,7 +217,7 @@ export default {
         },
         incomeTax: {
           title: "Income tax",
-          description: "Portion of the Salary that is taxable",
+          description: "Based on the National taxable income.",
           references: [
             "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html",
             "http://taxsummaries.pwc.com/ID/Japan-Individual-Taxes-on-personal-income"
@@ -227,6 +227,7 @@ export default {
         },
         restorationIncomeSurtax: {
           title: "Restoration income surtax",
+          description: "2.1% of the Income tax",
           references: [
             "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html",
             "http://taxsummaries.pwc.com/ID/Japan-Individual-Taxes-on-personal-income"
@@ -236,6 +237,7 @@ export default {
         },
         localTaxableIncome: {
           title: "Local taxable income",
+          description: "Salary minus Employment income deductions and local taxes deduction. Portion of the Salary that is taxable for local taxes.",
           references: [
             "http://taxsummaries.pwc.com/ID/Japan-Individual-Deductions",
             "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
@@ -245,6 +247,7 @@ export default {
         },
         prefecturalTax: {
           title: "Prefectural tax",
+          description: "6% of the Local taxable income",
           references: [
             "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
           ],
@@ -253,6 +256,7 @@ export default {
         },
         municipalTax: {
           title: "Municipal tax",
+          description: "4% of the Local taxable income",
           references: [
             "https://www.jetro.go.jp/en/invest/setting_up/section3/page7.html"
           ],
@@ -318,6 +322,11 @@ export default {
           type: 'out'
         }
       };
+    }
+  },
+  methods: {
+    zeroLowerLimit(oNum) {
+      return Math.max(0, oNum);
     }
   }
 };
