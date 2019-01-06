@@ -6,9 +6,15 @@
         <Field v-for="(field, key, index) in taxes" :key="key" :field-data="field" :field-name="key" />
         <Field v-for="(field, key, index) in insurances" :key="key" :field-data="field" :field-name="key" />
       </div>
+      <div class="col-sm-4">
+        <Field v-for="(field, key, index) in housing" :key="key" :field-data="field" :field-name="key" />
+      </div>
+      <div class="col-sm-4">
+        <Field v-for="(field, key, index) in otherExpenses" :key="key" :field-data="field" :field-name="key" />
+      </div>
     </div>
     <div class="row">
-      <div class="col-sm-4">
+      <div class="offset-4 col-sm-4">
         <Field v-for="(field, key, index) in results" :key="key" :field-data="field" :field-name="key" />
       </div>
     </div>
@@ -124,6 +130,42 @@ export default {
         municipalTaxRate: {
           proportional: 6e-2,
           fixed: 3.5e3
+        }
+      },
+      housing: {
+        monthlyFee: {
+          title: 'Monthly housing fee',
+          description: 'Monthly rent',
+          value: 150000,
+          type: 'in'
+        },
+        yearlyCosts: {
+          title: 'Initial housing costs (yearly)',
+          description: 'Additional initial costs like deposit, key money, insurance and other fees',
+          value: 400000,
+          type: 'in'
+        }
+      },
+      otherExpenses: {
+        dailyFood: {
+          title: 'Daily food',
+          value: 1500,
+          type: 'in'
+        },
+        monthlyTransportation: {
+          title: 'Monthly transportation',
+          description: 'All-line Pass allows public transportation in all lines. The monthly ticket is more expensive than bigger periods (3-month or 6-month)',
+          references: [
+            'https://www.tokyometro.jp/lang_en/ticket/types/pass/all/index.html'
+          ],
+          value: 17300,
+          type: 'in'
+        },
+        monthlyPersonalCare: {
+          title: 'Personal care',
+          description: 'Monthly expenses in personal care. This only includes common items for male and female, like medicine, deodorant, shampoo, etc',
+          value: 10000,
+          type: 'in'
         }
       }
     };
@@ -309,17 +351,42 @@ export default {
         }
       };
     },
+
+    housingYearlyCosts() {
+      return 12 * this.housing.monthlyFee.value + this.housing.yearlyCosts.value;
+    },
+
+    otherExpensesCosts() {
+      return 365 * this.otherExpenses.dailyFood.value + 12 * this.otherExpenses.monthlyTransportation.value + 12 * this.otherExpenses.monthlyPersonalCare.value;
+    },
+
     results() {
       return {
-        total: {
-          title: "Tax and insurance liability",
+        totalIncomePay: {
+          title: "Total tax and insurance liability",
           value: this.totalPay,
           type: 'out'
         },
         netIncome: {
-          title: "Net income",
+          title: "Net income (after taxes and insurances)",
           value: this.netIncome,
           type: 'out'
+        },
+        totalHousingPay: {
+          title: 'Housing costs (yearly)',
+          value: this.housingYearlyCosts,
+          type: 'out'
+        },
+        otherExpenses: {
+          title: 'Other expenses',
+          description: 'Costs of food, commuting, personal care, ...',
+          value: this.otherExpensesCosts,
+          type: 'out'
+        },
+        totalFreeMoney: {
+          title: 'Total free money',
+          description: 'After paying taxes, insurances, housing and other expenses',
+          value: this.netIncome - this.housingYearlyCosts - this.otherExpensesCosts
         }
       };
     }
